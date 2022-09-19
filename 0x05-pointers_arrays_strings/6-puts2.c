@@ -1,18 +1,20 @@
 #include "main.h"
-
+#include "2-strlen.c"
 /**
- * puts2 - Prints one char out of two of a string.
- * @str: The string containing characters.
- */
+ *  * puts2 - puts string twice
+ *   *
+ *    * @str: string to put twice
+ *     */
 void puts2(char *str)
 {
-	int i, len = 0;
+        int i;
 
-	while (str[i++])
-		len++;
-
-	for (i = 0; i < len; i += 2)
-		_putchar(str[i]);
-
-	_putchar('\n');
+        for (i = 0; i < _strlen(str); i++)
+        {
+                if (i % 2 == 0)
+                {
+                        _putchar(str[i]);
+                }
+        }
+        _putchar('\n');
 }
