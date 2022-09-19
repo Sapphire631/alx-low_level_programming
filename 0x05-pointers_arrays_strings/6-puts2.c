@@ -1,30 +1,18 @@
 #include "main.h"
-/**
- * puts_half - print half array
- * @str: string
- */
-void puts_half(char *str)
-{
-	int a = 0;
-	int b = 0;
 
-	while (str[a] != '\0')
-	{
-		a++;
-	}
-	a++;
-	if (a % 2 == 0)
-	{
-		b = a / 2;
-	}
-	else
-	{
-		b = (a - 1) / 2;
-	}
-	while (str[b] != '\0')
-	{
-		_putchar(str[b]);
-		b++;
-	}
+/**
+ * puts2 - Prints one char out of two of a string.
+ * @str: The string containing characters.
+ */
+void puts2(char *str)
+{
+	int i, len = 0;
+
+	while (str[i++])
+		len++;
+
+	for (i = 0; i < len; i += 2)
+		_putchar(str[i]);
+
 	_putchar('\n');
 }
