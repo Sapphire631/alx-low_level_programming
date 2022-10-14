@@ -1,87 +1,121 @@
 #include "variadic_functions.h"
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
+
 /**
- * printf_c - print a character.
- * @arg_variables: list of arguments.
- * Return: void
- */
-void printf_c(va_list arg_variables)
-{
-	printf("%c", va_arg(arg_variables, int));
-}
-/**
- * printf_i - print an integer.
- * @arg_variables: arguments
- * Return: void
- */
-void printf_i(va_list arg_variables)
-{
-	printf("%i", va_arg(arg_variables, int));
-}
-/**
- * printf_f - print a float.
+ * print_all - print anything
+ * @format: a list of types of arguments passed to the function
  *
- * @arg_variables: list of arguments.
- */
-void printf_f(va_list arg_variables)
-{
-	printf("%f", va_arg(arg_variables, double));
-}
-/**
- * printf_s - print a string.
- * @arg_variables: arguments
  * Return: void
  */
-void printf_s(va_list arg_variables)
-{
-	char *p;
 
-	p = va_arg(arg_variables, char *);
-
-	if (p == NULL)
-	p = "(nil)";
-	printf("%s", p);
-}
-/**
- * print_all - prints all.
- * @format: last argument.
- * Return: void
- */
 void print_all(const char * const format, ...)
 {
-	int i = 0;
-	int j = 0;
-	char *sep = "";
-	va_list arg_variables;
-	/*Array of struct containing the different variable types accepted*/
-	variable_type var[] = {
-	{"c", printf_c},
-	{"i", printf_i},
-	{"f", printf_f},
-	{"s", printf_s},
-	{NULL, NULL} };
-	/*Init arg list to retrieve the add arguments after parameter format*/
-	va_start(arg_variables, format);
-	/*test if both pointer and string different than NULL*/
-	j = 0;
-	while (format && format[j])
+	int j = 0, last_arg;
+	char type;
+	va_list params;
+
+	va_start(params, format);
+	while ((format != NULL) && (format[j]))
 	{
-		i = 0;
-		while (var[i].character)
+		last_arg = count_format(format);
+		type = *(format + j);
+		switch (type)
 		{
-			if (*(format + j) == *(var[i].character))
-			{
-				printf("%s", sep);
-					(var[i].printf)(arg_variables);
-						sep = ", ";
-							break;
-			}
-		i++;
+			case 'c':
+				printf("%c", va_arg(params, int));
+				print_comma(j, last_arg);
+				j++;
+				break;
+			case 'i':
+				printf("%d", va_arg(params, int));
+				print_comma(j, last_arg);
+				j++;
+				break;
+			case 'f':
+				printf("%f", va_arg(params, double));
+				print_comma(j, last_arg);
+				j++;
+				break;
+			case 's':
+				printf("%s", make_nil(va_arg(params, char *)));
+				print_comma(j, last_arg);
+				j++;
+				break;
+			default:
+				j++;
+			break;
 		}
-		j++;
 	}
 	printf("\n");
-	va_end(arg_variables);
+	va_end(params);
+}
+/**
+ * count_format - counts valid type in format
+ * @format: format to be used
+ *
+ * Return: count of the valid types
+ */
+
+int count_format(const char * const format)
+{
+	int i = 0, j = 0;
+	char type;
+
+	while ((*(format + j) != '\0') && (format != NULL))
+	{
+		type = *(format + j);
+		switch (type)
+		{
+			case 'c':
+				i = j;
+				j++;
+				break;
+			case 'i':
+				i = j;
+				j++;
+				break;
+			case 'f':
+				i = j;
+				j++;
+				break;
+			case 's':
+				i = j;
+				j++;
+				break;
+			default:
+				j++;
+				break;
+		}
+	}
+
+	return (i);
+}
+
+/**
+ * print_comma - prints a comma and space when valid
+ * @j: first number to be compared
+ * @x: second number to be compared
+ *
+ * Return: void
+ */
+
+void print_comma(int j, int x)
+{
+	if (j != x)
+	{
+		printf(", ");
+	}
+}
+
+/**
+ * make_nil - changes s to be "(nil)" if s is null
+ * @s: string to be used
+ *
+ * Return: pointer to s
+ */
+char *make_nil(char *s)
+{
+	if (s == NULL)
+		s = "(nil)";
+
+	return (s);
 }
